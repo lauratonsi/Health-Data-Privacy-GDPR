@@ -1,0 +1,875 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{makecell}
+\usepackage{amssymb}
+
+
+
+\title{\textbf{RELAZIONE PROGETTO 1}}
+\author{Cioni Susanna (Matricola: 0001164027), \\ Tonsi Laura (Matricola: 0001164043), \\ Vignoli Filippo (Matricola: 0900087618) \\ \vspace{0.3cm} \small Gepid -- Metodi Informatici per la Trasformazione Digitale \\ a.a. 2024/2025}
+\date{}
+
+\begin{document}
+
+\maketitle  % Spostato prima dell'indice
+{\small
+\tableofcontents
+}
+\newpage
+
+ \section*{Membri del gruppo}
+\begin{itemize}
+  \item \textbf{Laura Tonsi} -- Product Owner (PO), ha ricoperto il ruolo di soggetto autorizzato al trattamento per l’Università di Milano;
+  \item \textbf{Susanna Cioni} -- Data Protection Officer (DPO), ha ricoperto il ruolo di soggetto autorizzato al trattamento per l’ISTC-CNR;
+  \item \textbf{Filippo Vignoli} -- Valutatore tecnico, ha ricoperto il ruolo di soggetto autorizzato al trattamento per l’Università di Modena e Reggio Emilia.
+\end{itemize}
+
+
+\section{Inquadramento dello scenario progettuale}
+
+Il progetto PRIN \textit{TEMPO} coinvolge l’Istituto di Scienze e Tecnologie della Cognizione (ISTC) del CNR, l’Università degli Studi di Milano e l’Università degli Studi di Modena e Reggio Emilia. L’obiettivo è analizzare l’accettazione da parte dei pazienti di nuovi dispositivi tecnologici, sviluppare un’applicazione per il monitoraggio clinico e valutare la correlazione tra i dati raccolti e l’efficacia terapeutica.
+
+Nel rispetto del principio di \textit{accountability} (art. 5.2 GDPR), il team ha pianificato una serie di attività per garantire il corretto trattamento dei dati personali, con particolare attenzione a quelli relativi alla salute, che sono dati particolari ai sensi dell’art. 9 GDPR.
+
+\subsection*{Articolo 9 – Trattamento di categorie particolari di dati personali}
+\begin{enumerate}
+  \item È vietato trattare dati personali che rivelino l’origine razziale o etnica, le opinioni politiche, le convinzioni religiose o filosofiche, o l’appartenenza sindacale, nonché \textbf{dati genetici, dati biometrici intesi a identificare in modo univoco una persona fisica, dati relativi alla salute} o alla vita sessuale o all’orientamento sessuale della persona. 
+  \item Il paragrafo 1 \textbf{non} si applica se si verifica uno dei seguenti casi, ad esempio:
+  \begin{itemize}
+    \item l’interessato ha prestato il proprio consenso esplicito per una o più finalità specifiche;
+    \item il trattamento è necessario per motivi di interesse pubblico rilevante nel settore della sanità pubblica, per finalità di medicina preventiva o di ricerca scientifica, o per altri motivi indicati dal regolamento. % :contentReference[oaicite:2]{index=2}
+  \end{itemize}
+\end{enumerate}
+
+Il team ha individuato i seguenti documenti come essenziali per la gestione dei dati personali nel progetto TEMPO:
+
+\begin{enumerate}
+  \item \textbf{{Accordo di Contitolarità del Trattamento ai sensi dell'art. 26 del Regolamento (UE) 2016/679 (GDPR)}}
+  \item {\textbf{Valutazione d’impatto sulla protezione dei dati personali (DPIA})} – redatta tramite il software PIA CNIL.
+  \item \textbf{Informativa sul trattamento dei dati personali ai sensi degli articoli 13 e 14 del Regolamento (UE) 2016/679 (GDPR)};
+  \item \textbf{Registro delle attività di trattamento (Art. 30 GDPR)};
+  \item Due modelli distinti di \textbf{nomina a soggetto autorizzato al trattamento}, entrambi redatti ai sensi dell’art. 29 GDPR, differenziati per tipologia di attività svolta all’interno del progetto. 
+\end{enumerate}
+
+\subsection*{Durata della conservazione}
+
+I dati personali saranno conservati per l’intera durata del progetto \textit{TEMPO} (36 mesi), e successivamente per un periodo ulteriore di \textbf{10 anni} a fini di archiviazione per la ricerca scientifica, ai sensi degli artt. 5(1)(e) e 89(1) del Regolamento (UE) 2016/679 (GDPR).
+
+Durante la redazione della DPIA, il team ha valutato la possibilità di adottare un periodo di conservazione più breve. Tuttavia, al termine di un confronto strutturato tra i membri del gruppo e il DPO, è stata confermata la conservazione decennale, in virtù delle seguenti motivazioni:
+
+\begin{itemize}
+  \item \textbf{Finalità di ricerca scientifica e interesse pubblico}, come previsto dagli artt. 5(1)(e) e 89(1) GDPR;
+  \item \textbf{Conformità alle Linee guida 03/2020 dell’EDPB}, che autorizzano conservazioni prolungate se accompagnate da misure di garanzia adeguate;
+  \item \textbf{Riutilizzabilità e verificabilità}: una conservazione più estesa favorisce la riproducibilità degli studi e l'eventuale riutilizzo dei dati in progetti futuri;
+  \item \textbf{Allineamento con buone pratiche cliniche e scientifiche}, dove la conservazione decennale è una prassi consolidata;
+\end{itemize}
+
+Per garantire il rispetto dei principi di minimizzazione, integrità e sicurezza, sono state adottate le seguenti misure tecniche e organizzative:
+
+\begin{itemize}
+  \item \textbf{Pseudonimizzazione sistematica dei dati}, per separare l’identificativo personale dai dati clinici e contestuali;
+  \item \textbf{Crittografia avanzata} dei dati in transito (TLS 1.3) e a riposo (AES-256), per assicurare riservatezza e integrità;
+  \item \textbf{Controllo granulare degli accessi}, secondo il principio del ``least privilege'', riservato esclusivamente a personale autorizzato.
+\end{itemize}
+
+Queste misure sono pienamente coerenti anche con l’art. 32 GDPR (sicurezza del trattamento), e rendono la conservazione decennale giustificata, proporzionata e conforme ai principi di \textit{accountability} e \textit{privacy by design}.
+
+
+\subsection*{Tecnologie e architettura di sistema}
+Il trattamento dei dati è effettuato all’interno di infrastrutture IT proprietarie gestite dalle tre organizzazioni (ISTC-CNR, UNIMI, UNIMORE) in \textbf{regime di contitolarità}, ai sensi dell’art. 26 del GDPR. Tali infrastrutture sono integrate in un ambiente architetturale progettato secondo il principio di sicurezza \textit{by design} (art. 25 GDPR), con lo scopo di garantire un’elevata resilienza dei sistemi e la minimizzazione del rischio.
+
+Le misure adottate comprendono:
+\begin{itemize}
+  \item Policy IT condivise tra i titolari, che regolano l’accesso, l’uso e la gestione delle risorse digitali;
+  \item Accesso controllato tramite VPN e autenticazione multifattoriale (MFA), per ridurre i rischi di accesso non autorizzato;
+  \item Segmentazione logica delle reti (network zoning), che separa i flussi sensibili da quelli operativi, riducendo la superficie d'attacco;
+  \item Pseudonimizzazione conforme all’art. 4(5) GDPR, con gestione separata delle chiavi di ricomposizione affidata a personale con privilegi speciali;
+  \item Trasferimento dei dati in sicurezza tramite protocolli di cifratura end-to-end (TLS 1.3), sia per la comunicazione tra app/sensori e server sia per i backup tra datacenter;
+  \item Conservazione protetta: i dati elettronici sono archiviati su server fisici ridondanti ubicati in centri dati interni, sottoposti a crittografia a riposo (AES-256); eventuali supporti cartacei sono digitalizzati e distrutti secondo policy documentate;
+  \item Tracciabilità estesa: audit log con monitoraggio continuo degli accessi, delle modifiche e delle esportazioni dei dati, validati da sistemi SIEM (Security Information and Event Management);
+  \item Protezione perimetrale e interna: firewall di nuova generazione (NGFW), sistemi antivirus aggiornati, IDS/IPS e controllo delle vulnerabilità con aggiornamenti periodici;
+  \item Accesso selettivo: il principio del "least privilege" è applicato con profili granulari assegnati in base al ruolo e aggiornati periodicamente;
+  \item Formazione obbligatoria e ricorrente del personale autorizzato al trattamento, con tracciamento della frequenza e aggiornamento continuo.
+\end{itemize}
+
+\textbf{In considerazione del trattamento di dati appartenenti a categorie particolari ai sensi dell’art. 9 GDPR (in particolare dati sanitari), nonché dell’impiego di tecnologie innovative, il team ha ritenuto obbligatoria la redazione di una DPIA ai sensi dell’art. 35 GDPR.}
+
+Nel progetto TEMPO vengono trattate informazioni sensibili quali diagnosi, terapie e indicatori clinici e digitali, che rientrano tra le “categorie particolari di dati” definite dall’art. 9 del GDPR. La natura delicata di tali dati impone una valutazione accurata dei rischi legati alla riservatezza, all’integrità e alla possibilità di re-identificazione degli interessati.
+
+Secondo l’articolo 35 GDPR, è necessario effettuare una \textit{Valutazione d’Impatto sulla Protezione dei Dati} (DPIA) ogniqualvolta un trattamento, in particolare se basato su nuove tecnologie, possa comportare un rischio elevato per i diritti e le libertà delle persone fisiche. L’art. 35(3)(b) specifica che la DPIA è obbligatoria in caso di trattamento su larga scala di dati particolari. Le Linee guida dell’EDPB  confermano questa interpretazione, includendo tra i casi obbligatori l’uso sistematico di dispositivi tecnologici e la raccolta strutturata di dati sanitari.
+
+Nel contesto del progetto, la combinazione tra dati sanitari raccolti tramite app mobile e sensori indossabili, l’utilizzo di tecnologie avanzate e l’analisi automatizzata dei comportamenti utente configura chiaramente una situazione di rischio elevato. Di conseguenza, la redazione della DPIA non solo adempie a un obbligo giuridico, ma rappresenta anche un’espressione del principio di \textit{accountability} (art. 5.2 GDPR) e dell’approccio preventivo e trasparente richiesto dal Regolamento.
+
+\section{Sintesi della DPIA}
+La Valutazione d’Impatto sulla Protezione dei Dati (DPIA) è stata redatta seguendo il metodo messo a disposizione dal software \textbf{PIA CNIL}. 
+
+\subsection*{Fasi seguite nella compilazione}
+\begin{enumerate}
+  \item \textbf{Contestualizzazione}: definizione dei soggetti coinvolti, delle finalità e delle basi giuridiche del trattamento;
+  \item \textbf{Analisi dei trattamenti}: descrizione dei dati raccolti, modalità di elaborazione, archiviazione e cancellazione;
+  \item \textbf{Individuazione dei rischi}: identificazione dei possibili impatti su riservatezza, integrità e disponibilità;
+  \item \textbf{Misure di mitigazione}: valutazione delle misure tecniche e organizzative implementate;
+  \item \textbf{Valutazione finale del rischio residuo}: classificazione come accettabile in base agli standard della CNIL.
+\end{enumerate}
+
+\subsection*{Responsabilità nella redazione}
+
+La redazione della Valutazione d’Impatto è stata curata da \textbf{Laura Tonsi}, in qualità di \textit{Product Owner} e soggetto autorizzato al trattamento per l’Università degli Studi di Milano. La supervisione dal punto di vista della conformità normativa e della protezione dei dati personali è stata svolta da \textbf{Susanna Cioni}, nel ruolo di \textit{Data Protection Officer (DPO)}. La validazione tecnica della classificazione dei rischi e delle misure di sicurezza è stata effettuata da \textbf{Filippo Vignoli}, incaricato come referente e valutatore tecnico per l’Università di Modena e Reggio Emilia.
+
+
+
+\subsection{Categorie di dati trattati}
+\begin{itemize}
+  \item \textbf{Dati identificativi}: includono tutte le informazioni che consentono l’identificazione diretta dell’interessato, come nome, cognome, sesso, età, data di nascita e codice identificativo pseudonimizzato;
+  \item \textbf{Dati relativi alla salute}: rientrano tra i dati particolari ai sensi dell’art. 9 del GDPR e comprendono la diagnosi di emofilia A o B, il grado di severità, anamnesi clinica, informazioni su terapie farmacologiche in corso o passate, episodi di sanguinamento spontanei e post-traumatici, e dati relativi al dolore articolare;
+  \item \textbf{Dati digitali, contestuali e ambientali}: si riferiscono ai dati raccolti tramite l’applicazione mobile e i sensori indossabili, comprendono la frequenza d’uso, orari di accesso, geolocalizzazione, dati su movimento e attività fisica, variabili ambientali (es. temperatura o umidità), modalità di interazione con l’interfaccia e segnali digitali derivanti dal comportamento d’uso.
+\end{itemize}
+
+
+\subsection{Finalit\`a e base giuridica del trattamento}
+\textbf{Finalit\`a}: migliorare l'aderenza terapeutica, monitoraggio clinico, supporto alla ricerca scientifica.
+
+\textbf{Basi giuridiche}:
+\begin{itemize}
+  \item Art. 6(1)(e) GDPR – compito di interesse pubblico nell’ambito della ricerca scientifica;
+  \item Art. 9(2)(j) GDPR – finalità di ricerca scientifica con garanzie adeguate;
+  \item Art. 6(1)(a) e 9(2)(a) – consenso per funzionalità opzionali.
+\end{itemize}
+
+\subsection{Ciclo di vita dei dati}
+\begin{itemize}
+  \item \textbf{Raccolta}: i dati personali sono acquisiti attraverso l’applicazione mobile sviluppata nell’ambito del progetto, mediante sensori indossabili integrati nel dispositivo, oppure durante visite cliniche supervisionate da personale sanitario;
+  \item \textbf{Trasferimento}: i dati sono trasmessi in modo sicuro utilizzando protocolli di cifratura end-to-end (es. TLS 1.3), che garantiscono la riservatezza e l’integrità durante la fase di trasporto;
+  \item \textbf{Elaborazione}: una volta ricevuti, i dati sono pseudonimizzati e analizzati mediante strumenti di ricerca scientifica, con tecniche di incrocio, aggregazione e modellazione per trarre insight clinici e comportamentali;
+  \item \textbf{Conservazione}: i dati trattati sono archiviati su server sicuri ubicati all’interno di infrastrutture controllate, accessibili solo a personale debitamente autorizzato, per l’intera durata del progetto e successivamente per un periodo di 10 anni, secondo quanto previsto dagli articoli 5(1)(e) e 89(1) GDPR;
+  \item \textbf{Cancellazione o anonimizzazione}: al termine del periodo di conservazione previsto, i dati saranno irreversibilmente cancellati oppure resi anonimi mediante tecniche conformi alle Linee guida del Comitato europeo per la protezione dei dati (EDPB) e alla normativa vigente, eliminando ogni possibilità di re-identificazione dell’interessato.
+\end{itemize}
+\textbf{Nota:} la scelta tra cancellazione e anonimizzazione sarà formalizzata alla scadenza del periodo di conservazione, sulla base delle finalità residue di ricerca e della valutazione dell'interesse pubblico al mantenimento dei dati.
+
+
+\subsection{Diritti degli interessati}
+Gli interessati ricevono un’informativa completa, redatta ai sensi degli articoli 13 e 14 del GDPR, al momento dell’adesione alla sperimentazione, in forma chiara e comprensibile, anche attraverso supporti digitali integrati nell’applicazione.
+
+Sono garantiti i seguenti diritti, riconosciuti dagli articoli 15–22 del Regolamento (UE) 2016/679:
+\begin{itemize}
+  \item \textbf{Diritto di accesso} ai dati personali trattati (art. 15);
+  \item \textbf{Diritto di rettifica} dei dati inesatti e \textbf{integrazione} dei dati incompleti (art. 16);
+  \item \textbf{Diritto alla cancellazione} (“diritto all’oblio”), nei casi previsti dall’art. 17;
+  \item \textbf{Diritto alla limitazione del trattamento} in presenza delle condizioni di cui all’art. 18;
+  \item \textbf{Diritto di opposizione} al trattamento, ai sensi dell’art. 21, salvo i casi di interesse pubblico rilevante;
+  \item \textbf{Diritto alla portabilità} dei dati, in formato strutturato, di uso comune e leggibile da dispositivo automatico (art. 20).
+\end{itemize}
+
+Le richieste possono essere esercitate in qualsiasi momento, rivolgendosi ai contitolari o ai rispettivi DPO tramite i canali indicati nella documentazione del progetto o nell’interfaccia dell’applicazione.
+
+Eventuali limitazioni ai diritti sopra indicati sono applicate ai sensi dell’art. 89(2) del GDPR, qualora l’esercizio di tali diritti possa rendere impossibile o compromettere gravemente il conseguimento delle finalità di ricerca scientifica. In tali casi, il bilanciamento è documentato nel registro delle attività di trattamento e nella DPIA.
+
+
+\subsection{Rischi identificati}
+I rischi sono stati individuati in coerenza con i criteri stabiliti dal software PIA della CNIL:
+\begin{itemize}
+  \item \textbf{Violazione della riservatezza}: rischio di accesso, consultazione o divulgazione non autorizzata dei dati;
+  \item \textbf{Perdita di integrit\`a e disponibilit\`a}: rischio di alterazione, corruzione o indisponibilit\`a dei dati;
+  \item \textbf{Rischio di re-identificazione}: possibilit\`a di ricondurre indirettamente i dati all'interessato;
+  \item \textbf{Danno alla dignit\`a, reputazione o autodeterminazione dell'interessato.}
+\end{itemize}
+
+\subsection{Misure tecniche e organizzative}
+\begin{itemize}
+  \item Crittografia avanzata (es. AES-256, TLS 1.3);
+  \item Pseudonimizzazione e separazione delle chiavi;
+  \item Autenticazione e controllo accessi;
+  \item Audit log e tracciabilit\`a delle operazioni;
+  \item Backup cifrati con test di integrit\`a;
+  \item Sicurezza dei dispositivi e aggiornamenti automatici;
+  \item Segmentazione della rete e firewall;
+  \item Formazione periodica del personale autorizzato;
+  \item Procedure documentate di data breach.
+\end{itemize}
+
+\subsection{Valutazione del rischio residuo}
+\begin{itemize}
+  \item \textbf{Rischi considerati}: accessi non autorizzati, errori umani, vulnerabilit\`a tecniche, malware, danni psicologici;
+  \item \textbf{Probabilit\`a}: trascurabile o bassa;
+  \item \textbf{Impatto}: limitato o moderato;
+  \item \textbf{Rischio residuo}: accettabile, in coerenza con la classificazione PIA CNIL e le Linee guida EDPB.
+\end{itemize}
+
+Il trattamento \`e conforme al GDPR e pienamente legittimo in funzione delle finalit\`a scientifiche perseguite.
+
+\subsection{Infografiche a supporto della DPIA}
+
+\subsection*{a. Panoramica sintetica: principi, misure e rischi}
+L’infografica mostra tre sezioni principali:
+    \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Screenshot 2025-07-13 alle 14.35.24.png}
+    \caption{Panoramica sintetica: principi fondamentali, misure e rischi}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{Principi fondamentali}: come finalità, basi legali, informativa, periodo di conservazione e diritti degli interessati;
+  \item \textbf{Misure esistenti o pianificate}: tra cui crittografia, backup, anonimizzazione e controllo degli accessi;
+  \item \textbf{Rischi rilevati}: accesso illecito, modifiche indesiderate e perdita di dati.
+\end{itemize}
+Questa struttura evidenzia l'equilibrio tra rischi e contromisure, rafforzando l'approccio proattivo adottato nel progetto. 
+
+\subsection*{b. Mappa della probabilità e gravità dei rischi}
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Screenshot 2025-07-13 alle 12.31.07.png}
+    \caption{Mappaggio dei rischi}
+    \label{fig:enter-label}
+\end{figure}
+Nel progetto sono stati individuati tre rischi principali:
+\begin{itemize}
+  \item \textbf{(A)} Accesso illecito ai dati;
+  \item \textbf{(M)} Modifiche indesiderate dei dati;
+  \item \textbf{(P)} Perdita di dati.
+\end{itemize}
+
+Grazie all’adozione di misure come crittografia (AES-256), backup periodici, controllo degli accessi, pseudonimizzazione e tracciabilità, tutti e tre i rischi sono stati valutati come \textbf{residui contenuti}.
+\newpage
+Nel dettaglio:
+\begin{itemize}
+  \item Il rischio di \textbf{perdita di dati (P)} è stimato come \textit{trascurabile};
+  \item I rischi di \textbf{accesso illecito (A)} e \textbf{modifica indesiderata (M)} sono stimati entrambi come a \textit{probabilità limitata} e \textit{gravità limitata}.
+\end{itemize}
+
+Tutti i rischi rientrano nell’area verde della matrice, dimostrando l’efficacia preventiva delle misure adottate.
+
+\subsection*{c. Analisi dettagliata: impatti, minacce, fonti e misure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Screenshot 2025-07-13 alle 14.38.10.png}
+    \caption{Panoramica dei rischi}
+    \label{fig:enter-label}
+\end{figure}
+Questo grafico rappresenta in modo sistemico e multilivello la catena causale dei rischi individuati nel progetto \textit{TEMPO}, mettendo in relazione:
+
+\begin{itemize}
+  \item \textbf{Gli impatti potenziali} sugli interessati, qualora il rischio si concretizzasse:
+  \begin{itemize}
+    \item perdita di fiducia nel progetto di ricerca;
+    \item danno morale o psicologico (es. esposizione non autorizzata);
+    \item violazione della riservatezza dei dati sanitari.
+  \end{itemize}
+
+  \item \textbf{Le minacce} che possono originare il rischio:
+  \begin{itemize}
+    \item accessi non autorizzati ai dati (es. furto credenziali);
+    \item errori umani nel trattamento o nella pseudonimizzazione;
+    \item vulnerabilità tecniche nella trasmissione dei dati;
+    \item malware o attacchi informatici ai sistemi di archiviazione.
+  \end{itemize}
+
+  \item \textbf{Le fonti di rischio}, ovvero le origini operative o sistemiche:
+  \begin{itemize}
+    \item utenti malintenzionati (interni o esterni);
+    \item errori da parte del personale autorizzato;
+    \item software non aggiornato o configurato in modo errato;
+    \item scarsa formazione in materia di protezione dei dati.
+  \end{itemize}
+
+  \item \textbf{Le misure di mitigazione} già pianificate o implementate:
+  \begin{itemize}
+    \item crittografia (TLS 1.3, AES-256);
+    \item controllo degli accessi logici (con MFA);
+    \item backup cifrati e regolari;
+    \item anonimizzazione e pseudonimizzazione;
+    \item tracciabilità (audit log);
+    \item minimizzazione dei dati;
+    \item sicurezza dei canali informatici;
+    \item strumenti antimalware e IDS/IPS.
+  \end{itemize}
+\end{itemize}
+
+I tre rischi principali sono:
+\begin{itemize}
+  \item \textbf{Accesso illecito ai dati} (in rosso): gravità e probabilità stimate come \textit{trascurabili};
+  \item \textbf{Modifiche indesiderate dei dati} (in verde): gravità \textit{limitata}, probabilità \textit{trascurabile};
+  \item \textbf{Perdita di dati} (in blu): gravità \textit{limitata}, probabilità \textit{trascurabile}.
+\end{itemize}
+
+I flussi colorati collegano visivamente fonti, minacce e impatti con ciascun rischio identificato, evidenziando come le misure adottate agiscano in modo trasversale per ridurre il rischio residuo. Il grafico fornisce così una visione integrata e strutturata del sistema di protezione dei dati adottato nel progetto.
+
+
+\subsection{Piano d’azione}
+All’esito della valutazione condotta all’interno del software \textbf{PIA CNIL}, la classificazione del rischio residuo è risultata \textbf{accettabile} secondo i criteri stabiliti dalla piattaforma. Di conseguenza, non si è resa necessaria la compilazione di un piano d’azione specifico all’interno dello strumento, in quanto le misure tecniche e organizzative già implementate sono risultate sufficienti a contenere i rischi individuati.
+
+\subsection{Consultazione degli interessati}
+Non è stato richiesto un parere diretto degli interessati durante la redazione della DPIA, in quanto il trattamento è stato valutato come conforme al GDPR, con rischio residuo contenuto e misure tecniche e organizzative ampiamente adeguate. In accordo con le Linee guida dell’EDPB (WP248 rev.01), la consultazione preventiva non è necessaria nei casi in cui la valutazione dimostri che il trattamento non presenta un rischio elevato residuo, anche grazie all’applicazione rigorosa del principio di privacy by design. Inoltre, i soggetti interessati (pazienti) non sono ancora stati individuati, trattandosi di una fase progettuale preliminare.
+
+\subsection{Conclusioni della DPIA}
+
+La Valutazione d’Impatto sulla Protezione dei Dati (DPIA) ha evidenziato che le misure tecniche e organizzative adottate risultano adeguate e proporzionate rispetto ai rischi individuati. Il trattamento dei dati personali è pienamente conforme al Regolamento (UE) 2016/679 (GDPR), con particolare riferimento agli articoli 5 (principi del trattamento), 25 (privacy by design e by default), 26 (contitolarità del trattamento), 28 (nomina dei responsabili) e 35 (DPIA obbligatoria per dati particolari e nuove tecnologie).
+
+La valutazione ha confermato che il trattamento è proporzionato rispetto alle finalità scientifiche perseguite dal progetto TEMPO e che le misure attuate garantiscono un livello di protezione adeguato per i diritti e le libertà degli interessati. Alla luce della classificazione del rischio residuo come accettabile, non si rende necessaria l’adozione di ulteriori misure correttive.
+
+\newpage
+\section{Documentazione redatta}
+\subsection{{Accordo di Contitolarità del Trattamento}\\ ai sensi dell'art. 26 del Regolamento (UE) 2016/679 (GDPR)}
+\date{}
+
+
+\maketitle
+
+\section*{Tra}
+\begin{itemize}
+    \item \textbf{ISTC-CNR}, con sede legale in Roma, in qualità di contitolare e coordinatore scientifico del progetto TEMPO;
+    \item \textbf{Università degli Studi di Milano}, in qualità di contitolare responsabile dello sviluppo e gestione dell’applicativo;
+    \item \textbf{Università di Modena e Reggio Emilia}, in qualità di contitolare responsabile della validazione tecnica.
+\end{itemize}
+
+\section*{Premesse}
+Le Parti, nell’ambito del progetto PRIN ``TEMPO – Tight control of treatment adherence and efficacy by telemedicine'', determinano congiuntamente le finalità e i mezzi del trattamento dei dati personali. Si configurano pertanto come \textbf{contitolari} del trattamento ai sensi dell’art. 26 GDPR.
+
+\section*{Articolo 1 – Oggetto}
+Le Parti cooperano nella gestione del trattamento dei dati personali nel rispetto degli articoli 5, 6, 9, 26 e 32 del GDPR.
+
+\section*{Articolo 2 – Finalità del trattamento}
+Le finalità del trattamento sono:
+\begin{itemize}
+    \item la ricerca scientifica;
+    \item il monitoraggio dell’aderenza terapeutica;
+    \item la validazione clinica e tecnica dei dispositivi e delle interfacce digitali.
+\end{itemize}
+
+\section*{Articolo 3 – Ripartizione delle responsabilità}
+\begin{itemize}
+    \item \textbf{ISTC-CNR}: punto di contatto unico per gli interessati, conservazione e gestione sicura delle chiavi di pseudonimizzazione;
+    \item \textbf{UNIMI}: gestione dei consensi informati, fornitura dell’informativa e supporto tecnico per l’interfaccia utente;
+    \item \textbf{UNIMORE}: supervisione tecnica, gestione degli audit log e validazione dell’infrastruttura.
+\end{itemize}
+
+\section*{Articolo 4 – Diritti degli interessati}
+Le Parti si impegnano a cooperare per garantire l’esercizio dei diritti riconosciuti agli interessati dagli articoli 15–22 del GDPR. Il punto di contatto designato per le richieste è ISTC-CNR.
+
+\section*{Articolo 5 – Misure di sicurezza}
+Le Parti adottano misure tecniche e organizzative adeguate e coordinate, come descritto nella DPIA comune, in conformità all’art. 32 del GDPR.
+
+\section*{Articolo 6 – Designazione dei soggetti autorizzati}
+Ciascuna Parte ha formalmente designato come soggetti autorizzati al trattamento i membri del gruppo di progetto: \textbf{Laura Tonsi}, \textbf{Filippo Vignoli} e \textbf{Susanna Cioni}. Essi agiscono sotto l’autorità dei rispettivi titolari, nel rispetto degli obblighi di riservatezza e formazione, ai sensi dell’art. 32(4) GDPR.
+
+\section*{Articolo 7 – Durata e conservazione}
+I dati saranno conservati per tutta la durata del progetto (36 mesi), e successivamente per ulteriori 10 anni per finalità di archiviazione nel pubblico interesse e ricerca scientifica, ai sensi degli artt. 5(1)(e) e 89(1) GDPR, nonché delle regole deontologiche della ricerca.
+
+\vspace{1cm}
+
+\noindent Letto, approvato e sottoscritto digitalmente.\\
+Data: \rule{4cm}{0.4pt}
+\vspace{1cm}
+
+\noindent \textbf{ISTC-CNR} \\
+\rule{10cm}{0.4pt} \\
+Firma
+
+\vspace{1.2cm}
+
+\noindent \textbf{Università degli Studi di Milano} \\
+\rule{10cm}{0.4pt} \\
+Firma
+
+\vspace{1.2cm}
+
+\noindent \textbf{Università di Modena e Reggio Emilia} \\
+\rule{10cm}{0.4pt} \\
+Firma
+
+\vspace{1cm}
+
+Ai sensi dell’articolo 26 del Regolamento (UE) 2016/679 (GDPR), l’accordo di contitolarità è necessario quando due o più titolari determinano congiuntamente le finalità e i mezzi del trattamento dei dati personali.
+
+Nel contesto del progetto \textbf{TEMPO}, l’\textbf{ISTC-CNR}, l’\textbf{Università degli Studi di Milano} e l’\textbf{Università di Modena e Reggio Emilia} cooperano attivamente nella progettazione, gestione e analisi del trattamento, configurandosi dunque come contitolari.
+
+L’accordo ha la funzione di:
+\begin{itemize}
+  \item definire in modo trasparente i rispettivi ruoli e responsabilità;
+  \item regolare le modalità di cooperazione tra le parti;
+  \item individuare un punto di contatto per l’esercizio dei diritti da parte degli interessati;
+  \item documentare l’accountability con riferimento all’impianto organizzativo del trattamento.
+\end{itemize}
+
+Esso rappresenta uno strumento di governance essenziale per garantire la conformità normativa e la protezione effettiva dei dati personali trattati nel progetto.
+
+\newpage
+\subsection{Informativa sul trattamento dei dati personali ai sensi degli articoli 13 e 14 del Regolamento (UE) 2016/679 (GDPR)}
+\label{sec:informativa}
+\section*{Titolari del trattamento}
+Il trattamento dei dati è effettuato in regime di contitolarità ai sensi dell’art. 26 GDPR da:
+\begin{itemize}
+  \item \textbf{ISTC - CNR} (Istituto di Scienze e Tecnologie della Cognizione, Consiglio Nazionale delle Ricerche);
+  \item \textbf{Università degli Studi di Milano};
+  \item \textbf{Università degli Studi di Modena e Reggio Emilia}.
+\end{itemize}
+
+
+\section*{Finalità del trattamento}
+Il trattamento è finalizzato a:
+\begin{itemize}
+  \item monitorare l’aderenza terapeutica dei pazienti con emofilia;
+  \item supportare la ricerca clinica e scientifica tramite raccolta e analisi di dati sanitari;
+  \item migliorare l’interazione con dispositivi tecnologici e applicazioni digitali.
+\end{itemize}
+
+\section*{Base giuridica del trattamento}
+\begin{itemize}
+  \item Art. 6(1)(e) GDPR – esecuzione di un compito di interesse pubblico;
+  \item Art. 9(2)(j) GDPR – trattamento per finalità di ricerca scientifica;
+  \item Art. 6(1)(a) e 9(2)(a) – consenso dell’interessato per funzionalità opzionali.
+\end{itemize}
+
+\section*{Categorie di dati trattati}
+\begin{itemize}
+  \item \textbf{Dati identificativi}: nome, cognome, sesso, età, data di nascita, codice pseudonimizzato;
+  \item \textbf{Dati sanitari}: diagnosi, anamnesi, terapia, eventi di sanguinamento, dolore articolare;
+  \item \textbf{Dati digitali e ambientali}: dati da app mobile e sensori (frequenza, movimenti, contesto ambientale).
+\end{itemize}
+
+
+\section*{Modalità del trattamento}
+Il trattamento è svolto con strumenti informatici e, ove necessario, anche cartacei. I dati sono pseudonimizzati, cifrati (TLS 1.3/AES-256), conservati su server protetti e accessibili solo da personale autorizzato.
+
+\section*{Periodo di conservazione}
+I dati saranno conservati per 36 mesi (durata del progetto) e successivamente per 10 anni per finalità di archiviazione scientifica, secondo l’art. 5(1)(e) e 89 GDPR. Misure di sicurezza adeguate (pseudonimizzazione, crittografia, accesso controllato) sono state adottate.
+
+\section*{Destinatari dei dati}
+I dati potranno essere trattati solo da:
+\begin{itemize}
+  \item personale delle Università e del CNR debitamente autorizzato;
+  \item Fondazione Ca' Granda (responsabile del trattamento ex art. 28 GDPR).
+\end{itemize}
+
+\section*{Diritti degli interessati}
+Gli interessati possono esercitare i seguenti diritti:
+\begin{itemize}
+  \item accesso, rettifica, cancellazione, limitazione e opposizione;
+  \item portabilità dei dati;
+  \item presentazione di reclamo al Garante per la protezione dei dati personali.
+\end{itemize}
+Le richieste vanno inoltrate ai contitolari o ai rispettivi DPO tramite email (indirizzi indicati nell'app o nella documentazione di progetto).
+
+\section*{Trasferimento dei dati}
+Non è previsto il trasferimento dei dati al di fuori dell'Unione europea.
+
+\section*{Obbligatorietà del conferimento}
+Il conferimento dei dati è facoltativo, ma il mancato consenso può impedire la partecipazione alla sperimentazione o all’uso di alcune funzionalità dell’app.
+
+\section*{Decisioni automatizzate e profilazione}
+Non è previsto alcun processo decisionale automatizzato né profilazione degli interessati.
+
+\newpage
+\section*{Modulo di consenso informato al trattamento dei dati personali}
+
+\textbf{Progetto:} TEMPO – Tight control of treatment adherence and efficacy by tElemedicine\\
+\textbf{Contitolari del trattamento:} ISTC-CNR, Università degli Studi di Milano, Università degli Studi di Modena e Reggio Emilia\\
+\textbf{Responsabile del trattamento:} Fondazione Ca’ Granda Ospedale Maggiore Policlinico
+
+\vspace{0.5cm}
+Io sottoscritto/a \rule{3cm}{0.2pt}, nato/a il \rule{3cm}{0.2pt} a \rule{3cm}{0.2pt}, dichiaro di aver letto e compreso l’\textbf{Informativa sul trattamento dei dati personali} ai sensi degli artt. 13 e 14 del Regolamento (UE) 2016/679 (GDPR), ricevuta in formato cartaceo e/o digitale.
+
+\vspace{0.5cm}
+Con riferimento al trattamento dei miei dati personali per le finalità di ricerca scientifica descritte nell’informativa:
+
+\begin{itemize}
+  \item[] $\Box$ \textbf{Do il consenso} al trattamento dei miei dati personali per finalità di ricerca scientifica nell’ambito del progetto TEMPO.
+  \item[] $\Box$ \textbf{Nego il consenso}
+\end{itemize}
+
+Con riferimento a eventuali funzionalità opzionali dell’applicazione non necessarie allo svolgimento del progetto (es. notifiche personalizzate, reminder, tracciamento avanzato):
+
+\begin{itemize}
+  \item[] $\Box$ \textbf{Do il consenso} al trattamento dei miei dati per finalità opzionali.
+  \item[] $\Box$ \textbf{Nego il consenso}
+\end{itemize}
+
+\vspace{0.5cm}
+\textbf{Diritto di revoca:} Il consenso potrà essere revocato in qualsiasi momento, senza pregiudicare la liceità del trattamento effettuato prima della revoca.
+
+\vspace{0.5cm}
+\noindent
+Luogo e data: \rule{6cm}{0.2pt} \\\hfill Firma del/della partecipante: \rule{5cm}{0.2pt}
+
+\vspace{0.5cm}
+\noindent
+Firma per presa visione dell’informativa: \rule{5cm}{0.2pt}
+
+ \vspace{1cm}
+Nel contesto del progetto che prevede il trattamento su larga scala di dati sanitari raccolti tramite dispositivi digitali, risulta fondamentale garantire la trasparenza verso gli interessati, nel rispetto dei principi di \textit{accountability}, \textit{privacy by design} e \textit{lealtà del trattamento} (artt. 5, 12–14 GDPR).
+
+Per questo motivo sono stati predisposti i seguenti due documenti:
+
+\begin{itemize}
+  \item \textbf{Informativa privacy ai sensi degli artt. 13 e 14 GDPR:} fornisce agli interessati tutte le informazioni necessarie sul trattamento, inclusi titolari, finalità, basi giuridiche, categorie di dati trattati, tempi di conservazione, diritti esercitabili e canali di contatto. La sua redazione è obbligatoria per ogni trattamento conforme alla normativa.
+  \item \textbf{Modulo di consenso informato:} necessario per acquisire il consenso esplicito dell’interessato nei casi in cui la base giuridica non sia esclusivamente l’interesse pubblico (art. 6(1)(a) e 9(2)(a) GDPR). È particolarmente rilevante per funzionalità opzionali dell’app e per tutelare la libertà decisionale dell’interessato.
+\end{itemize}
+
+Questi documenti garantiscono la legittimità e la trasparenza del trattamento, rafforzano la tutela dei diritti degli interessati e permettono ai contitolari di adempiere agli obblighi normativi previsti dal GDPR.
+
+
+\vspace{1cm}
+
+\newpage
+
+\subsection{Registro delle attività di trattamento (Art. 30 GDPR)}
+
+Il presente registro è redatto ai sensi dell’articolo 30 del Regolamento (UE) 2016/679 (GDPR) e documenta le attività di trattamento effettuate dai contitolari del progetto \textit{TEMPO}.
+
+\vspace{0.5cm}
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{|p{3.5cm}|X|}
+\hline
+\textbf{Titolari del trattamento} & ISTC-CNR, Università degli Studi di Milano, Università degli Studi di Modena e Reggio Emilia (in regime di contitolarità ex art. 26 GDPR) \\
+\hline
+\textbf{Finalità del trattamento} & Ricerca scientifica in ambito clinico, monitoraggio dell’aderenza terapeutica dei pazienti con emofilia, sviluppo e test di tecnologie digitali per la raccolta dati \\
+\hline
+\textbf{Categorie di interessati} & Pazienti volontari affetti da emofilia A o B coinvolti nella sperimentazione \\
+\hline
+\textbf{Categorie di dati personali} & Dati identificativi, dati relativi alla salute, dati digitali contestuali e ambientali (da app mobile e sensori indossabili) \\
+\hline
+\textbf{Categorie di destinatari} & Personale autorizzato delle tre organizzazioni contitolari; Fondazione Ca’ Granda come responsabile del trattamento (art. 28 GDPR) \\
+\hline
+\textbf{Trasferimenti verso Paesi terzi} & Nessun trasferimento al di fuori dell’Unione europea \\
+\hline
+\textbf{Tempi di conservazione} & 36 mesi + 10 anni per finalità di archiviazione scientifica (art. 5(1)(e) e 89(1) GDPR) \\
+\hline
+\textbf{Misure di sicurezza} & Pseudonimizzazione, cifratura (AES-256, TLS 1.3), accesso controllato, audit log, firewall, segmentazione di rete, formazione periodica del personale \\
+\hline
+\end{tabularx}
+\end{table}
+
+Il registro delle attività di trattamento è uno strumento fondamentale per garantire la trasparenza e la tracciabilità delle operazioni che comportano il trattamento di dati personali. Ai sensi dell’articolo 30 del GDPR, i titolari e i responsabili del trattamento sono obbligati a tenere un registro aggiornato che descriva le principali caratteristiche dei trattamenti effettuati, incluse finalità, categorie di dati, destinatari, tempi di conservazione e misure di sicurezza.
+
+Nel progetto \textit{TEMPO}, la redazione del registro ha permesso di:
+
+\begin{itemize}
+  \item Documentare formalmente la struttura del trattamento effettuato da ciascun contitolare;
+  \item Dimostrare il rispetto del principio di \textit{accountability} (art. 5.2 GDPR);
+  \item Costituire una base operativa per eventuali controlli da parte del Garante per la protezione dei dati personali;
+  \item Facilitare la revisione periodica delle attività di trattamento, soprattutto in caso di aggiornamenti tecnici o normativi.
+\end{itemize}
+
+Il registro è stato redatto secondo uno schema conforme alle indicazioni fornite dal Garante italiano e integra tutte le attività connesse al trattamento dei dati nell’ambito della ricerca scientifica prevista dal progetto \textit{TEMPO}.
+
+\newpage
+\subsection{Nomine differenziate per soggetti autorizzati al trattamento (art. 29 GDPR)}
+
+Nel progetto \textit{TEMPO} sono stati redatti due modelli distinti di \textbf{nomina a soggetto autorizzato al trattamento}, entrambi conformi all’art. 29 del GDPR e all’art. 2-quaterdecies del Codice Privacy (D.lgs. 196/2003). 
+
+La distinzione si basa sulla diversa natura delle attività svolte dai membri del team:
+
+\begin{itemize}
+  \item Il \textbf{primo modello} è rivolto a profili tecnici, documentali o organizzativi, con autorizzazione al trattamento, pseudonimizzazione e gestione dei dati, ma senza interazione diretta con gli interessati.
+  \item Il \textbf{secondo modello} è destinato a operatori coinvolti nella \textbf{raccolta, elaborazione e assistenza diretta ai pazienti}, con focus sull’inserimento dei dati sanitari e sul supporto all’esercizio dei diritti privacy.
+\end{itemize}
+
+Questa distinzione, in linea con le buone prassi organizzative consente di:
+\begin{itemize}
+  \item Limitare l’autorizzazione solo alle attività strettamente necessarie (\textit{data minimization});
+  \item Formalizzare istruzioni chiare, su misura per i diversi ruoli;
+  \item Rafforzare le misure organizzative di sicurezza (art. 32 GDPR);
+  \item Dimostrare il rispetto del principio di \textit{accountability} (art. 5.2 GDPR).
+\end{itemize}
+
+Segue quindi la presentazione dei due modelli di nomina utilizzati nel progetto.
+
+\newpage
+\subsubsection{Nomina a soggetto autorizzato al trattamento dei dati personali (art. 29 GDPR)}
+
+\noindent
+\textbf{Oggetto:} Nomina ai sensi dell’art. 29 del Regolamento (UE) 2016/679 (GDPR) e dell’art. 2-quaterdecies del D.lgs. 196/2003.
+
+\vspace{0.4cm}
+\noindent
+\textbf{Progetto:} \textit{TEMPO – Tight control of treatment adherence and efficacy by tElemedicine}
+
+\vspace{0.4cm}
+\noindent
+\textbf{Contitolari del trattamento:}
+\begin{itemize}
+  \item ISTC - CNR (Istituto di Scienze e Tecnologie della Cognizione, Consiglio Nazionale delle Ricerche)
+  \item Università degli Studi di Milano
+  \item Università degli Studi di Modena e Reggio Emilia
+\end{itemize}
+
+\vspace{0.3cm}
+\noindent
+Il/la sottoscritto/a \textbf{\underline{\hspace{8cm}}}, in qualità di contitolare del trattamento dei dati personali,
+
+\vspace{0.5cm}
+
+\begin{center}
+\textbf{NOMINA}
+\end{center}
+
+\vspace{0.5cm}
+\noindent
+il/la Sig./Sig.ra \textbf{\underline{\hspace{8cm}}}, quale \textbf{soggetto autorizzato al trattamento} ai sensi dell’art. 29 GDPR, per lo svolgimento delle attività previste nell’ambito del progetto \textit{TEMPO}.
+
+
+\vspace{0.4cm}
+\noindent
+\textbf{Attività autorizzate:}
+\begin{itemize}
+  \item Trattamento dei dati personali dei pazienti coinvolti nel progetto;
+  \item Inserimento, modifica, pseudonimizzazione e gestione tecnica dei dati raccolti;
+  \item Utilizzo delle piattaforme e degli strumenti digitali messi a disposizione dal progetto;
+  \item Collaborazione alla redazione di documenti privacy, incluse DPIA e registro dei trattamenti;
+  \item Rispetto delle istruzioni fornite dai contitolari e dal DPO.
+\end{itemize}
+
+\vspace{0.3cm}
+\noindent
+\textbf{Obblighi dell’incaricato/a:}
+\begin{itemize}
+  \item Trattare i dati solo secondo le finalità e le istruzioni ricevute;
+  \item Garantire la riservatezza e la sicurezza dei dati trattati;
+  \item Astenersi dal divulgare dati o informazioni apprese nello svolgimento dell’incarico;
+  \item Partecipare alle sessioni di formazione sul trattamento dei dati personali.
+\end{itemize}
+
+\vspace{1cm}
+
+\noindent
+\textbf{Luogo e data:} \hfill \makebox[0.5\linewidth]{\hrulefill}
+
+\vspace{1cm}
+
+\noindent
+\textbf{Firma per accettazione dell’incaricato/a:} \hfill \makebox[0.5\linewidth]{\hrulefill}
+
+\vspace{1cm}
+
+\noindent
+\textbf{Firma del Titolare del trattamento:} \hfill \makebox[0.5\linewidth]{\hrulefill}
+
+\vspace{1cm}
+
+In conformità all’art. 29 del Regolamento (UE) 2016/679 (GDPR), i contitolari del trattamento sono tenuti a nominare formalmente i soggetti autorizzati che, per conto loro, accedono e trattano dati personali nell’ambito del progetto. Tali soggetti, che operano all’interno delle strutture universitarie e dell’ente di ricerca coinvolti, devono ricevere istruzioni documentate, essere formati adeguatamente e attenersi rigorosamente alle finalità definite.
+
+La redazione del modulo di nomina ha lo scopo di:
+
+\begin{itemize}
+  \item Garantire la tracciabilità e la legittimità del trattamento dei dati da parte del personale autorizzato;
+  \item Esplicitare le attività consentite e gli obblighi connessi al trattamento;
+  \item Dimostrare il rispetto del principio di \textit{accountability} da parte dei contitolari;
+  \item Costituire prova documentale in caso di controlli o audit da parte delle autorità competenti.
+\end{itemize}
+
+Nel progetto \textit{TEMPO}, ciascun membro del team ha assunto formalmente il ruolo di soggetto autorizzato, in quanto coinvolto direttamente nella gestione, pseudonimizzazione o analisi dei dati raccolti.
+
+\newpage
+\subsubsection{Nomina a soggetto autorizzato al trattamento dei dati personali (art. 29 GDPR)}
+\noindent
+Il/la sottoscritto/a \textbf{\underline{\hspace{6cm}}}, in qualità di rappresentante del contitolare del trattamento, 
+
+\vspace{0.5cm}
+
+\begin{center}
+\textbf{NOMINA}
+\end{center}
+
+\vspace{0.5cm}
+
+\noindent
+il/la Sig./Sig.ra \textbf{\underline{\hspace{6cm}}}, quale \textbf{soggetto autorizzato al trattamento dei dati personali}, ai sensi dell’art. 29 del Regolamento (UE) 2016/679 (GDPR), per le seguenti attività connesse al progetto \textit{TEMPO}:
+
+\vspace{0.3cm}
+\begin{itemize}
+  \item raccolta e inserimento dei dati personali e sanitari nell’applicazione mobile e nei sistemi clinici del progetto;
+  \item elaborazione, aggiornamento e gestione dei dati personali, in forma pseudonimizzata, nei sistemi informatici utilizzati dal progetto;
+  \item conservazione, backup e accesso autorizzato ai dati secondo i profili di ruolo;
+  \item assistenza ai pazienti nella gestione della propria privacy e dei diritti previsti dagli articoli 15–22 GDPR.
+\end{itemize}
+
+\vspace{0.5cm}
+\noindent
+L’autorizzato/a è stato/a formato/a in materia di protezione dei dati personali e si impegna a:
+
+\begin{itemize}
+  \item trattare i dati esclusivamente secondo le istruzioni ricevute dai contitolari;
+  \item rispettare le misure tecniche e organizzative predisposte per la sicurezza;
+  \item mantenere la riservatezza su tutte le informazioni e i dati personali trattati;
+  \item segnalare tempestivamente eventuali violazioni o anomalie.
+\end{itemize}
+
+\vspace{0.7cm}
+\noindent
+\textbf{Luogo e data:} \underline{\hspace{5cm}} \\\hfill \textbf{Firma dell’Incaricato/a:} \underline{\hspace{5cm}}
+
+\vspace{0.5cm}
+\noindent
+\textbf{Firma del Rappresentante del Titolare del trattamento:} \underline{\hspace{5cm}}
+
+Ai sensi dell’art. 29 del GDPR e dell’art. 2-quaterdecies del D.lgs. 196/2003 (Codice Privacy), i soggetti che operano sotto l’autorità diretta del titolare del trattamento e accedono a dati personali devono essere formalmente autorizzati. 
+
+Nel progetto \textit{TEMPO}, le attività di raccolta, gestione e analisi dei dati personali — in particolare quelli relativi alla salute — comportano trattamenti significativi e delicati, che devono essere affidati esclusivamente a soggetti debitamente istruiti e formalmente autorizzati.
+
+La \textbf{nomina a soggetto autorizzato}:
+
+\begin{itemize}
+  \item Attesta che il membro del team ha ricevuto istruzioni precise sul trattamento;
+  \item Dimostra l’adozione di misure organizzative adeguate, come richiesto dall’art. 32 GDPR;
+  \item Garantisce la tracciabilità delle responsabilità individuali nel ciclo di trattamento dei dati;
+  \item Contribuisce al rispetto del principio di \textit{accountability}, documentando l’impegno del titolare verso la sicurezza e la legalità del trattamento.
+\end{itemize}
+
+Nel caso specifico, ciascun membro del team ha ricevuto una nomina personalizzata che specifica le attività autorizzate nell’ambito del progetto e gli obblighi a cui è tenuto.
+
+
+\newpage
+\newpage
+\section{Gestione agile del progetto: Sprint e retrospettive}
+
+\renewcommand{\arraystretch}{1.3}
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|p{4cm}|p{6.3cm}|p{1.2cm}|p{2.5cm}|}
+\hline
+\textbf{Sprint} & \textbf{User Story} & \textbf{Punti} & \textbf{Assegnatario} \\
+\hline
+Sprint 1 – Pianificazione e setup (16–21 Giugno 2025) & \#1 Setup iniziale degli strumenti (Taiga, Overleaf, PIA CNIL) & 3 & Tutti \\
+& \#2 Definizione dei ruoli nel team & 2 & Tutti \\
+& \#3 Organizzazione del backlog e stima dei primi punti & 3 & Laura Tonsi \\
+\hline
+Sprint 2 – Redazione documentazione (23–28 Giugno 2025) & \#4 Redazione dell’informativa privacy ex artt. 13–14 GDPR & 3 & Susanna Cioni \\
+& \#5 Compilazione del modulo di consenso informato & 3 & Susanna Cioni \\
+& \#6 Nomina a soggetto autorizzato & 2 & Susanna Cioni \\
+& \#7 Registro delle attività di trattamento & 3 & Susanna Cioni \\
+& \#8 Redazione DPIA con PIA CNIL & 5 & Laura Tonsi \\
+& \#9 Redazione dell’accordo di contitolarità tra ISTC-CNR, UNIMI e UNIMORE & 3 & Susanna Cioni \\
+& \#10 Analisi dei rischi e misure in PIA CNIL & 2 & Filippo Vignoli \\
+& \#11 Formalizzazione basi giuridiche e ciclo vita dei dati & 3 & Susanna Cioni \\
+\hline
+Sprint 3 – Redazione relazione finale (01–05 Luglio 2025) & \#12 Creazione struttura generale e sezioni principali in LaTeX & 5 & Filippo Vignoli / Laura Tonsi \\
+& \#13 Inserimento infografiche DPIA & 2 & Laura Tonsi \\
+& \#14 Revisione tecnica e uniformazione grafica & 3 & Filippo Vignoli \\
+\hline
+Sprint 4 – Verifica, retrospettiva e consegna (07–12 Luglio 2025) & \#15 Verifica della completezza della documentazione e controllo incrociato con i requisiti iniziali & 5 & Tutti \\
+& \#16 Redazione della retrospettiva finale con valutazione del processo agile & 2 & Filippo Vignoli \\
+\hline
+\end{tabular}
+\caption{Sprint settimanali, user story, punti e assegnazioni}
+\end{table}
+
+        
+
+    
+
+\newpage
+Il progetto è stato articolato in quattro sprint iterativi, ognuno dei quali ha previsto user story specifiche, punteggi stimati e assegnazione dei compiti in base alle competenze.
+
+\paragraph{Sprint 1 – Setup e pianificazione (16–21 Giugno 2025)}
+\begin{itemize}
+  \item \textbf{Cosa ha funzionato bene:} attivazione rapida degli strumenti operativi (Taiga, Overleaf, PIA CNIL); chiarezza nella definizione dei ruoli; organizzazione efficace del backlog.
+  \item \textbf{Cosa poteva andare meglio:} incertezza iniziale sull'uso delle epiche; stima dei punti a volte poco fondata.
+  \item \textbf{Cosa possiamo migliorare:} condividere linee guida operative per l’uso degli strumenti; formalizzare la discussione collettiva sui criteri di stima.
+  \item \textbf{Apprendimenti chiave:} l’impostazione iniziale influisce fortemente sulla fluidità delle fasi successive; strumenti agili ben usati offrono vantaggi gestionali tangibili anche su progetti brevi.
+\end{itemize}
+
+\paragraph{Sprint 2 – Redazione documentazione privacy (23–28 Giugno 2025)}
+\begin{itemize}
+  \item \textbf{Cosa ha funzionato bene:} produzione coerente dei documenti richiesti dal GDPR; buona suddivisione dei compiti tra PO, DPO e validatore tecnico; utilizzo efficace del metodo PIA CNIL.
+  \item \textbf{Cosa poteva andare meglio:} carico eccessivo sul ruolo del DPO; iniziale incertezza su alcuni passaggi nel tool CNIL.
+  \item \textbf{Cosa possiamo migliorare:} pianificare un carico più equilibrato delle user story tra i ruoli e anticipare alcune attività nei primi sprint.
+  \item \textbf{Apprendimenti chiave:} la competenza normativa e l’organizzazione tecnica devono procedere in parallelo; la DPIA richiede tempo e collaborazione.
+\end{itemize}
+
+\paragraph{Sprint 3 – Redazione relazione finale (01–05 Luglio 2025)}
+\begin{itemize}
+  \item \textbf{Cosa ha funzionato bene:} uso coerente del linguaggio LaTeX; ottima integrazione delle infografiche; collaborazione tra ruoli tecnici e normativi.
+  \item \textbf{Cosa poteva andare meglio:} tempo limitato per la revisione grafica finale; iniziale coordinamento da migliorare su Overleaf.
+  \item \textbf{Cosa possiamo migliorare:} adottare una struttura standard del documento fin dalle prime fasi; pianificare un tempo dedicato al controllo tipografico.
+  \item \textbf{Apprendimenti chiave:} la qualità grafica è fondamentale anche in progetti normativi; LaTeX si conferma uno strumento professionale se usato con rigore.
+\end{itemize}
+
+\paragraph{Sprint 4 – Verifica e retrospettiva (07–12 Luglio 2025)}
+\begin{itemize}
+  \item \textbf{Cosa ha funzionato bene:} controllo incrociato efficace dei deliverable; valutazione critica del processo agile ben condotta.
+  \item \textbf{Cosa poteva andare meglio:} tempi stretti per eventuali modifiche; minore partecipazione diffusa nella fase finale.
+  \item \textbf{Cosa possiamo migliorare:} inserire un buffer temporale per la revisione già nella pianificazione; assegnare microtask conclusivi a tutto il team.
+  \item \textbf{Apprendimenti chiave:} la retrospettiva permette di consolidare l’esperienza; la verifica finale è un momento fondamentale per la coerenza complessiva.
+\end{itemize}
+
+
+\subsection{Gestione delle Epiche nel progetto}
+
+Nel corso dello sviluppo del progetto, il team ha organizzato le \textbf{user story} all'interno di \textbf{epiche} per raggruppare logicamente attività affini e facilitare la gestione del backlog su \textbf{Taiga}. Ogni epica rappresenta un obiettivo tematico di alto livello, a cui sono associate più user story collegate tra loro per finalità o contenuto.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|p{4cm}|p{8.5cm}|}
+\hline
+\textbf{Epica} & \textbf{Descrizione e user story collegate} \\
+\hline
+\textbf{\#17 Setup iniziale e strumenti} & Configurazione del progetto e degli strumenti operativi.\\
+\hline
+\textbf{\#18 Redazione documentazione} & Produzione dei documenti privacy obbligatori ai sensi del GDPR, incluse nomine e informative.\\
+\hline
+\textbf{\#19 Redazione DPIA} & Redazione e analisi della DPIA con metodo PIA CNIL, inclusa la valutazione dei rischi e le basi giuridiche.\\
+\hline
+\textbf{\#20 Redazione relazione finale} & Produzione della relazione finale, con attenzione agli aspetti tecnici e grafici.\\
+\hline
+\textbf{\#21 Verifica e retrospettiva} & Chiusura del progetto con verifica dei requisiti e retrospettiva sul processo agile.\\
+\hline
+\end{tabular}
+\caption{Epiche del progetto e user story associate}
+\end{table}
+
+Questa struttura ha permesso di mantenere un'organizzazione chiara del lavoro, tracciando l’avanzamento sia a livello granulare (user story) sia a livello aggregato (epiche). 
+
+\newpage
+\subsection{Diario delle ore di lavoro del team}
+
+La seguente tabella riassume il contributo orario stimato da ciascun membro del gruppo, tenendo conto della distribuzione delle user story e delle epiche completate, nonché della complessità tecnica e normativa delle attività svolte.
+
+\begin{table}[H]
+\centering
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\textbf{Nome} & \begin{tabular}{@{}c@{}}Analisi\\e setup\end{tabular} & \begin{tabular}{@{}c@{}}Documentazione\\privacy\end{tabular} & \begin{tabular}{@{}c@{}}Redazione\\e grafica\end{tabular} & \begin{tabular}{@{}c@{}}Revisione\\e verifica\\finale\end{tabular} & \textbf{Totale} \\
+\hline
+Laura Tonsi & 4h & 10h & 6h & 3h & 23h \\
+Susanna Cioni & 3h & 10h & 4h & 3h & 20h \\
+Filippo Vignoli & 2h & 3h & 4h & 3h & 12h \\
+\hline
+\textbf{Totale} & \textbf{9h} & \textbf{23h} & \textbf{14h} & \textbf{9h} & \textbf{55h} \\
+\hline
+\end{tabular}
+\caption{Distribuzione stimata delle ore di lavoro tra i membri del team.}
+\end{table}
+
+
+\section{Conclusioni}
+
+Il progetto \textit{TEMPO} ha rappresentato per il nostro gruppo un’occasione formativa di rilievo, che ci ha permesso di confrontarci con le sfide legate alla protezione dei dati personali in ambito scientifico, applicando concretamente i principi del GDPR e utilizzando strumenti professionali come il software \textit{PIA CNIL} per la valutazione d’impatto.
+
+L’esperienza ci ha consentito di sviluppare competenze interdisciplinari, combinando aspetti giuridici, tecnici e organizzativi in un contesto operativo strutturato secondo metodologie agili. L’adozione di uno schema per sprint e retrospettive ha favorito una gestione iterativa e trasparente del lavoro, sebbene non siano mancate criticità. In particolare, abbiamo affrontato difficoltà nella distribuzione equilibrata del carico tra i membri, nella stima iniziale delle attività e nella gestione dei tempi stretti per le revisioni finali. Tali ostacoli, tuttavia, hanno rappresentato momenti di apprendimento importanti, spingendoci a migliorare la comunicazione interna e a sviluppare maggiore flessibilità operativa.
+
+La collaborazione all’interno del team si è rivelata un elemento centrale: la necessità di coordinarsi su compiti differenziati — dalla redazione della documentazione alla costruzione delle infografiche, fino alla revisione grafica — ha rafforzato il senso di corresponsabilità e l’interdipendenza positiva tra i ruoli.
+
+Nel complesso, il progetto ci ha offerto l’opportunità di acquisire maggiore consapevolezza sulla rilevanza della protezione dei dati nella progettazione digitale, e ci ha fornito strumenti utili per affrontare con rigore e senso critico futuri contesti professionali in ambito pubblico, scientifico e accademico.
+
+
+\section{Link}
+
+\begin{itemize}
+    \item \textbf{\href{https://it.overleaf.com/read/rzkvfjdmkhdk#b95b79}{Overleaf}} – piattaforma di redazione collaborativa del documento in LaTeX;
+    \item \textbf{\href{https://tree.taiga.io/project/lauratonsi-progetto-tempo/timeline}{Taiga}} – strumento utilizzato per la gestione agile del progetto;
+    \item \textbf{\href{https://drive.google.com/drive/folders/1DXKTGwY1woVSbVWUzwg4IQvkDNkxoAI4?usp=drive_link}{DPIA in formato JSON (Google Drive)}} – esportazione completa della valutazione d’impatto dal software PIA CNIL.
+\end{itemize}
+\end{document}
